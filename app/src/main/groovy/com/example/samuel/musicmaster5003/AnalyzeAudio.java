@@ -13,7 +13,7 @@ public class AnalyzeAudio extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_record_audio);
+        setContentView(R.layout.activity_show_spectrogram);
 
         try {
             final Spectrogram spectrogram = SpectrogramMaker.makeSpectrogram(this, "ukeprog");
