@@ -1,5 +1,8 @@
 package com.example.samuel.musicmaster5003;
 
+import com.example.samuel.musicmaster5003.musicmodel.Chord;
+import com.example.samuel.musicmaster5003.musicmodel.PitchClass;
+
 import static org.junit.Assert.*;
 import org.junit.Test;
 

@@ -1,15 +1,22 @@
-package com.example.samuel.musicmaster5003;
+package com.example.samuel.musicmaster5003.activity;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.ImageView;
+
+import com.example.samuel.musicmaster5003.R;
+import com.example.samuel.musicmaster5003.Spectrogram;
+import com.example.samuel.musicmaster5003.SpectrogramMaker;
+import com.example.samuel.musicmaster5003.musicmodel.Chord;
+import com.example.samuel.musicmaster5003.musicmodel.MusicUtil;
+import com.example.samuel.musicmaster5003.musicmodel.Note;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class AnalyzeAudio extends AppCompatActivity {
+public class AnalyzeAudioActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

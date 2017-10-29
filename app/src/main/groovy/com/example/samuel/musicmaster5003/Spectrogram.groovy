@@ -1,12 +1,12 @@
 package com.example.samuel.musicmaster5003;
 
 import android.graphics.Bitmap;
-import android.support.annotation.NonNull;
+import android.support.annotation.NonNull
+import com.example.samuel.musicmaster5003.musicmodel.MusicUtil
+import com.example.samuel.musicmaster5003.musicmodel.Note
+import com.example.samuel.musicmaster5003.musicmodel.PitchClass;
 
-import java.security.InvalidParameterException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.security.InvalidParameterException
 
 public class Spectrogram {
     private final double PERCENTILE = 0.98;

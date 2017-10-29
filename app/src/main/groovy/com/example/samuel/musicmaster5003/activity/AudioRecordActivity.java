@@ -1,4 +1,4 @@
-package com.example.samuel.musicmaster5003;
+package com.example.samuel.musicmaster5003.activity;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -7,6 +7,9 @@ import android.support.v7.widget.AppCompatButton;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+
+import com.example.samuel.musicmaster5003.ExtAudioRecorder;
+import com.example.samuel.musicmaster5003.R;
 
 import org.codehaus.groovy.runtime.DefaultGroovyMethods;
 

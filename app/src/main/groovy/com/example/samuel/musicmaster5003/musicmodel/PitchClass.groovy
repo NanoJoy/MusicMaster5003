@@ -1,4 +1,4 @@
-package com.example.samuel.musicmaster5003
+package com.example.samuel.musicmaster5003.musicmodel
 
 /**
  * Created by Samuel on 10/17/2017.
