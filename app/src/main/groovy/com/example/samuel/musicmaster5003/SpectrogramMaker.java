@@ -24,8 +24,8 @@ public class SpectrogramMaker {
         return Color.HSVToColor(hsv);
     }
 
-    public static Spectrogram makeSpectrogram(Activity activity, String fileName) throws java.io.IOException {
-        ReadWAV2Array audioTest = new ReadWAV2Array(activity, fileName);
+    public static Spectrogram makeSpectrogram(Activity activity, String fileName, boolean inCache) throws java.io.IOException {
+        ReadWAV2Array audioTest = new ReadWAV2Array(activity, fileName, inCache);
         double[] rawData = audioTest.getByteArray();
         int length = rawData.length;
 

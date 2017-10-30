@@ -2,6 +2,7 @@
 package com.example.samuel.musicmaster5003
 
 import android.app.Activity
+import android.content.res.Resources
 import org.apache.commons.io.IOUtils
 
 import java.nio.ByteBuffer
@@ -24,11 +25,17 @@ public class ReadWAV2Array {
         samplingRate
     }
 
-    ReadWAV2Array(Activity activity, String fileName) throws IOException {
+    ReadWAV2Array(Activity activity, String fileName, inCache) throws IOException {
         this.activity = activity
-        def resources = activity.getResources()
-        InputStream inputStream = resources.openRawResource(
-                resources.getIdentifier(fileName, "raw", activity.getPackageName()))
+        InputStream inputStream
+        if (inCache) {
+            File file = new File(fileName)
+            inputStream = new FileInputStream(file)
+        } else {
+            Resources resources = activity.getResources()
+            inputStream = resources.openRawResource(
+                    resources.getIdentifier(fileName, "raw", activity.getPackageName()))
+        }
         entireFileData = IOUtils.toByteArray(inputStream)
         String format = new String(Arrays.copyOfRange(entireFileData, 8, 12), "UTF-8")
 

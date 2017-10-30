@@ -9,7 +9,6 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
 import static org.junit.Assert.assertFalse;
 
@@ -23,24 +22,20 @@ public class ChordTest {
         List<PitchClass> twoNotes = new ArrayList<>();
         twoNotes.add(PitchClass.A);
         twoNotes.add(PitchClass.E);
-        assertFalse(Chord.fromPitchClasses(twoNotes).isPresent());
+        assertFalse(Chord.fromPitchClasses(twoNotes) != null);
         List<PitchClass> fiveNotes = new ArrayList<>();
         fiveNotes.add(PitchClass.A);
         fiveNotes.add(PitchClass.E);
         fiveNotes.add(PitchClass.C);
         fiveNotes.add(PitchClass.G);
         fiveNotes.add(PitchClass.Bb);
-        assertFalse(Chord.fromPitchClasses(fiveNotes).isPresent());
+        assertFalse(Chord.fromPitchClasses(fiveNotes) != null);
     }
 
     @Test
     public void nonThirdBasedChordReturnsUnknown() {
         List<PitchClass> notes = Arrays.asList(PitchClass.A, PitchClass.B, PitchClass.E);
-        Optional<Chord> chordOp = Chord.fromPitchClasses(notes);
-        assertTrue(chordOp.isPresent());
-        Chord chord = chordOp.get();
-        assertEquals(chord.getQuality(), Chord.Quality.UNKNOWN);
-        assertEquals(chord.getRootNote(), null);
+        checkChord(notes, Chord.Quality.UNKNOWN, null);
     }
 
     @Test
@@ -64,9 +59,8 @@ public class ChordTest {
     }
 
     private void checkChord(List<PitchClass> notes, Chord.Quality quality, PitchClass root) {
-        Optional<Chord> chordOp = Chord.fromPitchClasses(notes);
-        assertTrue(chordOp.isPresent());
-        Chord chord = chordOp.get();
+        Chord chord = Chord.fromPitchClasses(notes);
+        assertTrue(chord != null);
         assertEquals(chord.getQuality(), quality);
         assertEquals(chord.getRootNote(), root);
     }

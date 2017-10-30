@@ -38,23 +38,23 @@ public class Chord {
         this.pitches = pitches
     }
 
-    static Optional<Chord> fromPitchClasses(List<PitchClass> pitchClasses) {
+    static Chord fromPitchClasses(List<PitchClass> pitchClasses) {
         def numPitches = pitchClasses.size()
         if (numPitches < 2 || numPitches > 4) {
-            return Optional.ofNullable(null)
+            return null
         }
         def sortedPitches = pitchClasses.sort { a, b -> a.steps <=> b.steps }
         if (numPitches == 2) {
             switch (sortedPitches[1].steps - sortedPitches[0].steps) {
                 case 7:
-                    return Optional.of(new Chord(sortedPitches[0], Quality.OPEN_FIFTH, sortedPitches))
+                    return new Chord(sortedPitches[0], Quality.OPEN_FIFTH, sortedPitches)
                     break
                 case 5:
-                    return Optional.of(new Chord(sortedPitches[1], Quality.OPEN_FIFTH, sortedPitches))
+                    return new Chord(sortedPitches[1], Quality.OPEN_FIFTH, sortedPitches)
                     break
                 default:
                     //println("Slice " + pitchClasses[0].name() + " " + pitchClasses[1].name())
-                    return Optional.of(new Chord(null, Quality.UNKNOWN, sortedPitches))
+                    return new Chord(null, Quality.UNKNOWN, sortedPitches)
                     break
             }
         }
@@ -69,7 +69,7 @@ public class Chord {
             inRootForm = checkIfRootForm(steps)
         }
         if (!inRootForm) {
-            return Optional.of(new Chord(null, Quality.UNKNOWN, sortedPitches))
+            return new Chord(null, Quality.UNKNOWN, sortedPitches)
         }
         def qualities = new ArrayList<Quality>()
         qualities.addAll(Quality.values())
@@ -85,9 +85,9 @@ public class Chord {
             }
         }
         if (qualities.size() == 0) {
-            return Optional.of(new Chord(null, Quality.UNKNOWN, sortedPitches))
+            return new Chord(null, Quality.UNKNOWN, sortedPitches)
         }
-        Optional.of(new Chord(sortedPitches[0], qualities[0], sortedPitches))
+        new Chord(sortedPitches[0], qualities[0], sortedPitches)
     }
 
     private static void frontToBack(List list) {
