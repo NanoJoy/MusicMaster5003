@@ -1,14 +1,14 @@
 package com.example.samuel.musicmaster5003;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.RandomAccessFile;
-
 import android.media.AudioFormat;
 import android.media.AudioRecord;
 import android.media.MediaRecorder;
 import android.media.MediaRecorder.AudioSource;
 import android.util.Log;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.RandomAccessFile;
 
 public class ExtAudioRecorder
 {
@@ -320,6 +320,11 @@ public class ExtAudioRecorder
             {
                 if (rUncompressed)
                 {
+                    int tries = 10;
+                    while (tries < 10 && audioRecorder.getState() != AudioRecord.STATE_INITIALIZED) {
+                        tries++;
+                        Thread.sleep(1000);
+                    }
                     if ((audioRecorder.getState() == AudioRecord.STATE_INITIALIZED) & (filePath != null))
                     {
                         // write file header

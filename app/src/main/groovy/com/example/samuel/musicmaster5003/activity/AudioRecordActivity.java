@@ -37,7 +37,7 @@ public class AudioRecordActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        filePath = getExternalCacheDir() + "/test.wav";
+        filePath = getExternalCacheDir() + "/testtest.wav";
         setContentView(R.layout.activity_audio_record);
         recordButton = new RecordButton((Button)findViewById(R.id.recordButton));
         infoView = (TextView)findViewById(R.id.infoView);
@@ -81,9 +81,10 @@ public class AudioRecordActivity extends AppCompatActivity {
     }
 
     private void stopRecording() {
-        audioRecorder.stop();
-        audioRecorder.reset();
-        try {final Spectrogram spectrogram = SpectrogramMaker.makeSpectrogram(this, filePath, true);
+        try {
+            audioRecorder.stop();
+            audioRecorder.reset();
+            final Spectrogram spectrogram = SpectrogramMaker.makeSpectrogram(this, filePath, true);
             List<List<Note>> allNotes = new ArrayList<>();
             for (int i = 0; i < spectrogram.getImage().getWidth(); i++) {
                 allNotes.add(i, spectrogram.getNotes(i));
@@ -104,6 +105,8 @@ public class AudioRecordActivity extends AppCompatActivity {
             state = State.WAITING;
         } catch (IOException e) {
             showAndLogError(e);
+        } finally {
+            audioRecorder.release();
         }
     }
 
