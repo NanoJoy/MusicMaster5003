@@ -65,7 +65,7 @@ public class ReadWAV2Array {
 
         if (numChannels == 2) {
 
-            int newLength = totalLength/4;
+            int newLength = totalLength / 4;
             Double[] data_mono = new Double[newLength];
 
             double left, right;
@@ -77,9 +77,9 @@ public class ReadWAV2Array {
             return data_mono;
         }
         def dataMono = new double[totalLength / 2]
-        0.upto(totalLength / 2 - 1, {
-            dataMono[it] = (short) ((data_raw[it + 1] & 0xff) << 8) | (data_raw[it] & 0xff)
-        })
+        for (int i = 0; i < dataMono.length; i ++) {
+            dataMono[i] = (short) ((data_raw[i * 2 + 1] & 0xff) << 8) | (data_raw[i * 2] & 0xff)
+        }
         dataMono
     }
 }

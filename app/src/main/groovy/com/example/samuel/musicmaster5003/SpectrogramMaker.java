@@ -34,7 +34,6 @@ public class SpectrogramMaker {
         final int OVERLAP_FACTOR = 8;
         final int WINDOW_STEP = WINDOW_SIZE / OVERLAP_FACTOR;
 
-        //calculate FFT parameters
         double sampleRate = audioTest.getSamplingRate();
         double highestDetectableFrequency = sampleRate / 2.0;
         int rateRatio = ((int)highestDetectableFrequency) / MAX_FREQ_NEEDED;
