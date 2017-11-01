@@ -26,7 +26,7 @@ import java.util.List;
 public class AudioRecordActivity extends AppCompatActivity {
     private final String LOG_TAG = "AudioRecordActivity";
 
-    private ExtAudioRecorder audioRecorder = ExtAudioRecorder.getInstance(false);
+    private ExtAudioRecorder audioRecorder = null;
     private String filePath = null;
     private RecordButton recordButton;
     private TextView infoView;
@@ -55,12 +55,14 @@ public class AudioRecordActivity extends AppCompatActivity {
                         case WAITING:
                             startRecording();
                             button.setText(R.string.stop_recording);
+                            infoView.setText(R.string.recording);
                             state = State.RECORDING;
                             break;
                         case RECORDING:
                             state = State.PROCESSING;
                             button.setEnabled(false);
                             button.setText(R.string.processing);
+                            infoView.setText(R.string.processing);
                             stopRecording();
                             button.setText(R.string.start_recording);
                             button.setEnabled(true);
@@ -75,6 +77,7 @@ public class AudioRecordActivity extends AppCompatActivity {
     }
 
     private void startRecording() {
+        audioRecorder = ExtAudioRecorder.getInstance(false);
         audioRecorder.setOutputFile(filePath);
         audioRecorder.prepare();
         audioRecorder.start();
@@ -107,12 +110,15 @@ public class AudioRecordActivity extends AppCompatActivity {
             showAndLogError(e);
         } finally {
             audioRecorder.release();
+            audioRecorder = null;
         }
     }
 
     public void onStop() {
         super.onStop();
-        audioRecorder.release();
+        if (audioRecorder != null) {
+            audioRecorder.release();
+        }
     }
 
     private void logFile(String path) {
