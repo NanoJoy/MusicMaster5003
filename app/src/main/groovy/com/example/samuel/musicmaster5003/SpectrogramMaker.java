@@ -25,7 +25,11 @@ public class SpectrogramMaker {
     }
 
     public static Spectrogram makeSpectrogram(Activity activity, String fileName, boolean inCache) throws java.io.IOException {
-        ReadWAV2Array audioTest = new ReadWAV2Array(activity, fileName, inCache);
+        return makeSpectrogram(activity, fileName, inCache, null);
+    }
+
+    public static Spectrogram makeSpectrogram(Activity activity, String fileName, boolean inCache, double[] data) throws java.io.IOException {
+        ReadWAV2Array audioTest = new ReadWAV2Array(activity, fileName, inCache, data);
         double[] rawData = audioTest.getByteArray();
         int length = rawData.length;
 

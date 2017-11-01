@@ -11,6 +11,7 @@ import java.nio.ByteOrder
 public class ReadWAV2Array {
 
     private byte[] entireFileData
+    private double[] data
     private Activity activity
     private String fileInfo
     private int numChannels
@@ -25,7 +26,8 @@ public class ReadWAV2Array {
         samplingRate
     }
 
-    ReadWAV2Array(Activity activity, String fileName, inCache) throws IOException {
+    ReadWAV2Array(Activity activity, String fileName, boolean inCache, double[] data = null) throws IOException {
+        this.data = data
         this.activity = activity
         InputStream inputStream
         if (inCache) {
@@ -60,6 +62,9 @@ public class ReadWAV2Array {
     }
 
     public double[] getByteArray (){
+        if (data != null) {
+            return data
+        }
         byte[] data_raw = Arrays.copyOfRange(entireFileData, 44, entireFileData.length);
         int totalLength = data_raw.length;
 

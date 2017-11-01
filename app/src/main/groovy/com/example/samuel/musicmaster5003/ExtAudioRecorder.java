@@ -9,6 +9,7 @@ import android.util.Log;
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.util.Arrays;
 
 public class ExtAudioRecorder
 {
@@ -93,6 +94,9 @@ public class ExtAudioRecorder
     // Buffer for output(only in uncompressed mode)
     private byte[]                   buffer;
 
+    // Array of doubles, write during recording rather than processing afterwards
+    private double[]                 data;
+
     // Number of bytes written to file after header(only in uncompressed mode)
     // after stop() is called, this size is written to the header/data chunk in the wave file
     private int                      payloadSize;
@@ -109,6 +113,18 @@ public class ExtAudioRecorder
         return state;
     }
 
+    private void writeToData() {
+        double[] temp = Arrays.copyOf(data, data.length + (buffer.length / 2));
+        for (int i = 0; i < buffer.length / 2; i++) {
+            temp[data.length + i] = (short) ((buffer[i * 2 + 1] & 0xff) << 8) | (buffer[i * 2] & 0xff);
+        }
+        data = temp;
+    }
+
+    public double[] getData() {
+        return data.clone();
+    }
+
     /*
     *
     * Method used for recording.
@@ -121,6 +137,7 @@ public class ExtAudioRecorder
             audioRecorder.read(buffer, 0, buffer.length); // Fill buffer
             try
             {
+                writeToData();
                 randomAccessWriter.write(buffer); // Write buffer to file
                 payloadSize += buffer.length;
                 if (bSamples == 16)
@@ -347,6 +364,7 @@ public class ExtAudioRecorder
                         randomAccessWriter.writeInt(0); // Data chunk size not known yet, write 0
 
                         buffer = new byte[framePeriod*bSamples/8*nChannels];
+                        data = new double[0];
                         state = State.READY;
                     }
                     else

@@ -85,9 +85,10 @@ public class AudioRecordActivity extends AppCompatActivity {
 
     private void stopRecording() {
         try {
+            double[] data = audioRecorder.getData();
             audioRecorder.stop();
             audioRecorder.reset();
-            final Spectrogram spectrogram = SpectrogramMaker.makeSpectrogram(this, filePath, true);
+            final Spectrogram spectrogram = SpectrogramMaker.makeSpectrogram(this, filePath, true, data);
             List<List<Note>> allNotes = new ArrayList<>();
             for (int i = 0; i < spectrogram.getImage().getWidth(); i++) {
                 allNotes.add(i, spectrogram.getNotes(i));
