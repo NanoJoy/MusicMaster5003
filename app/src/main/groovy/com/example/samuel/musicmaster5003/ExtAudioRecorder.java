@@ -125,6 +125,10 @@ public class ExtAudioRecorder
         return data.clone();
     }
 
+    public int getSamplingRate() {
+        return sRate;
+    }
+
     /*
     *
     * Method used for recording.

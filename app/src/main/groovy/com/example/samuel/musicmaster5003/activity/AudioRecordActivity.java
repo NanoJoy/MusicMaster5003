@@ -43,6 +43,53 @@ public class AudioRecordActivity extends AppCompatActivity {
         infoView = (TextView)findViewById(R.id.infoView);
     }
 
+    private class FinishProcessingListener {
+        void onFinishProcessing(String chords) {
+            state = State.WAITING;
+            recordButton.setState(state);
+            infoView.setText(chords);
+        }
+    }
+
+    private class ProcessingRunnable implements Runnable {
+        private FinishProcessingListener listener;
+        private double[] data;
+        private int sampleRate;
+
+        public ProcessingRunnable(FinishProcessingListener listener, double[] data, int sampleRate) {
+            this.listener = listener;
+            this.data = data;
+            this.sampleRate = sampleRate;
+        }
+
+        @Override
+        public void run() {
+            final Spectrogram spectrogram = SpectrogramMaker.makeSpectrogram(data, sampleRate);
+            List<List<Note>> allNotes = new ArrayList<>();
+            for (int i = 0; i < spectrogram.getImage().getWidth(); i++) {
+                allNotes.add(i, spectrogram.getNotes(i));
+            }
+            List<Chord> chordSlices = new ArrayList<>();
+            for (int i = 0; i < allNotes.size() - 3; i++) {
+                Chord chord = Chord.fromPitchClasses(MusicUtil.findMostProminentPitchesForWindow(allNotes, i));
+                if (chord != null) {
+                    chordSlices.add(chord);
+                }
+            }
+            List<Chord> chords = MusicUtil.getChords(chordSlices);
+            final StringBuilder sb = new StringBuilder("Detected chords:\n");
+            for (int i = 0; i < chords.size(); i++) {
+                sb.append(chords.get(i).toString()).append("\n");
+            }
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    listener.onFinishProcessing(sb.toString());
+                }
+            });
+        }
+    }
+
     private class RecordButton {
         private Button button;
         RecordButton(Button but) {
@@ -74,6 +121,12 @@ public class AudioRecordActivity extends AppCompatActivity {
                 }
             });
         }
+        void setState(State state) {
+            if (state == State.WAITING) {
+                button.setEnabled(true);
+                button.setText(R.string.start_recording);
+            }
+        }
     }
 
     private void startRecording() {
@@ -86,28 +139,12 @@ public class AudioRecordActivity extends AppCompatActivity {
     private void stopRecording() {
         try {
             double[] data = audioRecorder.getData();
+            int sampleRate = audioRecorder.getSamplingRate();
             audioRecorder.stop();
             audioRecorder.reset();
-            final Spectrogram spectrogram = SpectrogramMaker.makeSpectrogram(this, filePath, true, data);
-            List<List<Note>> allNotes = new ArrayList<>();
-            for (int i = 0; i < spectrogram.getImage().getWidth(); i++) {
-                allNotes.add(i, spectrogram.getNotes(i));
-            }
-            List<Chord> chordSlices = new ArrayList<>();
-            for (int i = 0; i < allNotes.size() - 3; i++) {
-                Chord chord = Chord.fromPitchClasses(MusicUtil.findMostProminentPitchesForWindow(allNotes, i));
-                if (chord != null) {
-                    chordSlices.add(chord);
-                }
-            }
-            List<Chord> chords = MusicUtil.getChords(chordSlices);
-            StringBuilder sb = new StringBuilder("Detected chords:\n");
-            for (int i = 0; i < chords.size(); i++) {
-                sb.append(chords.get(i).toString()).append("\n");
-            }
-            infoView.setText(sb.toString());
-            state = State.WAITING;
-        } catch (IOException e) {
+            Thread processingThread = new Thread(new ProcessingRunnable(new FinishProcessingListener(), data, sampleRate));
+            processingThread.start();
+        } catch (Exception e) {
             showAndLogError(e);
         } finally {
             audioRecorder.release();

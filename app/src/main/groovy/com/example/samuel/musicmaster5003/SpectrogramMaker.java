@@ -24,13 +24,8 @@ public class SpectrogramMaker {
         return Color.HSVToColor(hsv);
     }
 
-    public static Spectrogram makeSpectrogram(Activity activity, String fileName, boolean inCache) throws java.io.IOException {
-        return makeSpectrogram(activity, fileName, inCache, null);
-    }
-
-    public static Spectrogram makeSpectrogram(Activity activity, String fileName, boolean inCache, double[] data) throws java.io.IOException {
-        ReadWAV2Array audioTest = new ReadWAV2Array(activity, fileName, inCache, data);
-        double[] rawData = audioTest.getByteArray();
+    public static Spectrogram makeSpectrogram(double[] data, int sampleRate) {
+        double[] rawData = data;
         int length = rawData.length;
 
         final int MAX_FREQ_NEEDED = 1500;
@@ -38,7 +33,6 @@ public class SpectrogramMaker {
         final int OVERLAP_FACTOR = 8;
         final int WINDOW_STEP = WINDOW_SIZE / OVERLAP_FACTOR;
 
-        double sampleRate = audioTest.getSamplingRate();
         double highestDetectableFrequency = sampleRate / 2.0;
         int rateRatio = ((int)highestDetectableFrequency) / MAX_FREQ_NEEDED;
         int lowestFrequency = 351;//(int)(5.0 * (sampleRate / rateRatio) / WINDOW_SIZE);
