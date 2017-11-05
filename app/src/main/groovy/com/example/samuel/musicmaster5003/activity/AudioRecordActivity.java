@@ -65,18 +65,7 @@ public class AudioRecordActivity extends AppCompatActivity {
         @Override
         public void run() {
             final Spectrogram spectrogram = SpectrogramMaker.makeSpectrogram(data, sampleRate);
-            List<List<Note>> allNotes = new ArrayList<>();
-            for (int i = 0; i < spectrogram.getImage().getWidth(); i++) {
-                allNotes.add(i, spectrogram.getNotes(i));
-            }
-            List<Chord> chordSlices = new ArrayList<>();
-            for (int i = 0; i < allNotes.size() - 3; i++) {
-                Chord chord = Chord.fromPitchClasses(MusicUtil.findMostProminentPitchesForWindow(allNotes, i));
-                if (chord != null) {
-                    chordSlices.add(chord);
-                }
-            }
-            List<Chord> chords = MusicUtil.getChords(chordSlices);
+            List<Chord> chords = spectrogram.findChords();
             final StringBuilder sb = new StringBuilder("Detected chords:\n");
             for (int i = 0; i < chords.size(); i++) {
                 sb.append(chords.get(i).toString()).append("\n");
@@ -111,9 +100,6 @@ public class AudioRecordActivity extends AppCompatActivity {
                             button.setText(R.string.processing);
                             infoView.setText(R.string.processing);
                             stopRecording();
-                            button.setText(R.string.start_recording);
-                            button.setEnabled(true);
-                            state = State.WAITING;
                             break;
                         default:
                             break;

@@ -61,6 +61,9 @@ public class MusicUtil {
         def chords = new ArrayList<Chord>()
         0.upto(chordSlices.size() - 1) {
             def slice = chordSlices[it]
+            if (slice == null) {
+                return true
+            }
             def fifthOfCurrent = slice.quality == Chord.Quality.OPEN_FIFTH && slice.rootNote == currentChord.rootNote
             if (chordSlices[it].equals(currentChord) ||  fifthOfCurrent) {
                 return true

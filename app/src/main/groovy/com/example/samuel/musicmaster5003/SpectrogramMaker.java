@@ -1,19 +1,9 @@
 package com.example.samuel.musicmaster5003;
 
-import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 
-import org.codehaus.groovy.runtime.ArrayUtil;
-import org.codehaus.groovy.runtime.DefaultGroovyMethods;
-
 import java.util.Arrays;
-
-import groovy.lang.Closure;
-import groovy.transform.CompileStatic;
-
-import static java.lang.Math.PI;
-import static java.lang.Math.sin;
 
 public class SpectrogramMaker {
 

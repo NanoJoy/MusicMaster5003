@@ -1,10 +1,11 @@
-package com.example.samuel.musicmaster5003;
+package com.example.samuel.musicmaster5003
 
-import android.graphics.Bitmap;
+import android.graphics.Bitmap
 import android.support.annotation.NonNull
+import com.example.samuel.musicmaster5003.musicmodel.Chord
 import com.example.samuel.musicmaster5003.musicmodel.MusicUtil
 import com.example.samuel.musicmaster5003.musicmodel.Note
-import com.example.samuel.musicmaster5003.musicmodel.PitchClass;
+import com.example.samuel.musicmaster5003.musicmodel.PitchClass
 
 import java.security.InvalidParameterException
 
@@ -26,17 +27,7 @@ public class Spectrogram {
         this.hightestFreq = highestFreq;
     }
 
-    public List<Note> getFourLoudestNotes(int sliceIndex) {
-        def notesSorted = getNotes(sliceIndex).sort { a, b ->
-            b.intensity <=> a.intensity
-        }
-        def uniqueNotes = notesSorted.unique { a, b ->
-            a.pitchClass <=> b.pitchClass
-        }
-        return notesSorted.collate(4)[0]
-    }
-
-    public List<Note> getNotes(int sliceIndex) {
+    List<Note> getNotes(int sliceIndex) {
         double multiplier = 523.25 / 86;
         List<Integer> brightSpots = getBrightSpots(sliceIndex);
         List<Note> notes = new ArrayList<>();
@@ -45,6 +36,25 @@ public class Spectrogram {
             notes.add(new Note(pitch, data[sliceIndex][it]));
         }
         return notes;
+    }
+
+    private List<Integer> findChordStarts() {
+        double lastAvg = 0
+        int curMax = -1
+        List<Integer> starts = []
+        for (int i = 0; i < data.length; i++) {
+            def avg = data[i].sum() / data[i].size()
+            if (avg <= lastAvg) {
+                if (curMax == i - 1) {
+                    starts.add(i - 1)
+                    curMax = i
+                }
+            } else {
+                curMax = i
+            }
+            lastAvg = avg
+        }
+        starts
     }
 
     @NonNull
@@ -74,6 +84,22 @@ public class Spectrogram {
             }
         }
         return spots;
+    }
+
+    List<Chord> findChords() {
+        def chords = []
+        def allNotes = []
+        0.upto(data.length - 1, {
+            allNotes.add(it, getNotes(it))
+        })
+        def starts = findChordStarts()
+        starts.add(data.length)
+        0.upto(starts.size() - 2, {
+            def chunkSize = starts[it + 1] - starts[it]
+            def pitches = MusicUtil.findMostProminentPitchesForWindow(allNotes, starts[it], chunkSize)
+            chords.add(Chord.fromPitchClasses(pitches))
+        })
+        MusicUtil.getChords(chords)
     }
 
     private double getPercentile(double[] arr) {
