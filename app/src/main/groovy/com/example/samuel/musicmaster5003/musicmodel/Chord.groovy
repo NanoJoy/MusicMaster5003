@@ -5,23 +5,25 @@ package com.example.samuel.musicmaster5003.musicmodel
 
 public class Chord {
     static enum Quality {
-        OPEN_FIFTH(7, null, null),
-        MAJOR(4, 3, null),
-        MINOR(3, 4, null),
-        DIMINISHED(3, 3, null),
-        AUGMENTED(4, 4, null),
-        MAJOR_7(4, 3, 4),
-        DOM_7(4, 3, 3),
-        MINOR_7(3, 4, 3),
-        HALF_DIM_7(3, 3, 4),
-        DIM_7(3, 3, 3),
-        UNKNOWN(null, null, null)
+        OPEN_FIFTH("Open fifth", 7, null, null),
+        MAJOR("Major", 4, 3, null),
+        MINOR("Minor", 3, 4, null),
+        DIMINISHED("Dim", 3, 3, null),
+        AUGMENTED("Aug", 4, 4, null),
+        MAJOR_7("Maj7", 4, 3, 4),
+        DOM_7("Dom7", 4, 3, 3),
+        MINOR_7("Min7", 3, 4, 3),
+        HALF_DIM_7("HalfDim7", 3, 3, 4),
+        DIM_7("Dim7", 3, 3, 3),
+        UNKNOWN("Unknown", null, null, null)
 
+        final String displayName
         final Integer firstInterval
         final Integer secondInterval
         final Integer thirdInterval
 
-        Quality(Integer firstInterval, Integer secondInterval, Integer thirdInterval) {
+        Quality(String displayName, Integer firstInterval, Integer secondInterval, Integer thirdInterval) {
+            this.displayName = displayName
             this.firstInterval = firstInterval
             this.secondInterval = secondInterval
             this.thirdInterval = thirdInterval
@@ -136,6 +138,6 @@ public class Chord {
             pitches.each { sb.append(it.name()) }
             return sb.toString()
         }
-        rootNote.name() + " " + quality.name()
+        rootNote.name() + " " + quality.displayName
     }
 }
