@@ -3,6 +3,7 @@ package com.example.samuel.musicmaster5003
 import android.graphics.Bitmap
 import android.support.annotation.NonNull
 import com.example.samuel.musicmaster5003.musicmodel.Chord
+import com.example.samuel.musicmaster5003.musicmodel.ChordWithLength
 import com.example.samuel.musicmaster5003.musicmodel.MusicUtil
 import com.example.samuel.musicmaster5003.musicmodel.Note
 import com.example.samuel.musicmaster5003.musicmodel.PitchClass
@@ -86,7 +87,7 @@ public class Spectrogram {
         return spots;
     }
 
-    List<Chord> findChords() {
+    List<ChordWithLength> findChords() {
         def chords = []
         def allNotes = []
         0.upto(data.length - 1, {
@@ -97,7 +98,7 @@ public class Spectrogram {
         0.upto(starts.size() - 2, {
             def chunkSize = starts[it + 1] - starts[it]
             def pitches = MusicUtil.findMostProminentPitchesForWindow(allNotes, starts[it], chunkSize)
-            chords.add(Chord.fromPitchClasses(pitches))
+            chords.add(new ChordWithLength(Chord.fromPitchClasses(pitches), chunkSize))
         })
         MusicUtil.getChords(chords)
     }

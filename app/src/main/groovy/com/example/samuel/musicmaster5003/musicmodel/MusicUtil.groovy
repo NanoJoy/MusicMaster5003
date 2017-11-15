@@ -56,27 +56,31 @@ public class MusicUtil {
         pitches
     }
 
-    static List<Chord> getChords(List<Chord> chordSlices) {
+    static List<ChordWithLength> getChords(List<ChordWithLength> chordSlices) {
         def currentChord = new Chord(null, Chord.Quality.UNKNOWN, [])
-        def chords = new ArrayList<Chord>()
+        def chords = new ArrayList<ChordWithLength>()
         0.upto(chordSlices.size() - 1) {
-            def slice = chordSlices[it]
+            def slice = chordSlices[it].chord
+            def length = chordSlices[it].length
             if (slice == null) {
                 return true
             }
             def fifthOfCurrent = slice.quality == Chord.Quality.OPEN_FIFTH && slice.rootNote == currentChord.rootNote
-            if (chordSlices[it].equals(currentChord) ||  fifthOfCurrent) {
+            if (slice.equals(currentChord) ||  fifthOfCurrent) {
+                chords[chords.size() - 1] = new ChordWithLength(currentChord, chords[chords.size() - 1].length + length)
+                return true
+            }
+            def currentOfFifth = [Chord.Quality.MAJOR, Chord.Quality.MINOR].contains(slice.quality) && slice.rootNote == currentChord.rootNote
+            if (currentOfFifth) {
+                chords[chords.size() - 1] = new ChordWithLength(slice, chords[chords.size() - 1].length + length)
+                currentChord = slice
                 return true
             }
             if (slice.quality != Chord.Quality.UNKNOWN) {
                 currentChord = slice
-                chords.add(currentChord)
+                chords.add(chordSlices[it])
                 return true
             }
-//            if (!slice.getPitches().every { currentChord.noteBelongsTo(it) }) {
-//                currentChord = slice
-//                chords.add(currentChord)
-//            }
         }
         chords
     }

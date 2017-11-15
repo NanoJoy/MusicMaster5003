@@ -65,7 +65,7 @@ public class AudioRecordActivity extends AppCompatActivity {
         @Override
         public void run() {
             final Spectrogram spectrogram = SpectrogramMaker.makeSpectrogram(data, sampleRate);
-            List<Chord> chords = spectrogram.findChords();
+            List<ChordWithLength> chords = spectrogram.findChords();
             final StringBuilder sb = new StringBuilder("Detected chords:\n");
             for (int i = 0; i < chords.size(); i++) {
                 sb.append(chords.get(i).toString()).append("\n");
