@@ -6,4 +6,6 @@
     <string name="waiting_for_record">Ready to record</string>
     <string name="recording">Recording&#8230;</string>
     <string name="back">Back to Record</string>
+    <string name="pickiness_description">Use this slider to choose how picky you want to be in adding notes to the chord.
+    More to the right means there will be more missing chords and fewer incorrect chords.</string>
 </resources>

@@ -2,13 +2,35 @@
 <RelativeLayout android:id="@+id/RelativeLayout01"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
+    android:gravity="center"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <Button
         android:id="@+id/recordButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
+        android:layout_centerHorizontal="true"
         android:text="@string/start_recording" />
+
+    <TextView
+        android:id="@+id/barDescription"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="20dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_below="@id/recordButton"
+        android:text="@string/pickiness_description"/>
+
+    <SeekBar
+        android:id="@+id/pickinessBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:max="15"
+        android:progress="7"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/barDescription"/>
 
 </RelativeLayout>

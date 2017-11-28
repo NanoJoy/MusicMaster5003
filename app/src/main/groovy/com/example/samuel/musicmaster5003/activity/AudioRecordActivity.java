@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.SeekBar;
 
 import com.example.samuel.musicmaster5003.*;
 import com.example.samuel.musicmaster5003.musicmodel.*;
@@ -23,6 +24,7 @@ public class AudioRecordActivity extends AppCompatActivity {
     private ExtAudioRecorder audioRecorder = null;
     private String fileName = null;
     private String filePath = null;
+    private SeekBar pickinessBar = null;
     private RecordButton recordButton;
 
     private enum State { WAITING, RECORDING, PROCESSING, ERROR }
@@ -35,6 +37,7 @@ public class AudioRecordActivity extends AppCompatActivity {
         filePath = getExternalCacheDir() + fileName;
         setContentView(R.layout.activity_audio_record);
         recordButton = new RecordButton((Button)findViewById(R.id.recordButton));
+        pickinessBar = (SeekBar)findViewById(R.id.pickinessBar);
     }
 
     private class ProcessingRunnable implements Runnable {
@@ -49,7 +52,9 @@ public class AudioRecordActivity extends AppCompatActivity {
         @Override
         public void run() {
             final Spectrogram spectrogram = SpectrogramMaker.makeSpectrogram(data, sampleRate);
-            List<ChordWithLength> chords = spectrogram.findChords();
+            int sliderPos = pickinessBar.getProgress();
+            double pickiness = sliderPos == 0 ? 0.01 : sliderPos / 100.0;
+            List<ChordWithLength> chords = spectrogram.findChords(pickiness);
             List<Chord> justChords = new ArrayList<>();
             for (int i = 0; i < chords.size(); i++) {
                 justChords.add(i, chords.get(i).chord);

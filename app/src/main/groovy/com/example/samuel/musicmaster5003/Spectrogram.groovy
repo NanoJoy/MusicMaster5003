@@ -87,7 +87,7 @@ public class Spectrogram {
         return spots;
     }
 
-    List<ChordWithLength> findChords() {
+    List<ChordWithLength> findChords(double pickiness) {
         def chords = []
         def allNotes = []
         0.upto(data.length - 1, {
@@ -97,7 +97,7 @@ public class Spectrogram {
         starts.add(data.length)
         0.upto(starts.size() - 2, {
             def chunkSize = starts[it + 1] - starts[it]
-            def pitches = MusicUtil.findMostProminentPitchesForWindow(allNotes, starts[it], chunkSize)
+            def pitches = MusicUtil.findMostProminentPitchesForWindow(allNotes, starts[it], chunkSize, pickiness)
             chords.add(new ChordWithLength(Chord.fromPitchClasses(pitches), chunkSize))
         })
         MusicUtil.getChords(chords)

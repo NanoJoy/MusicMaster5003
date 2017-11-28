@@ -30,8 +30,10 @@ public class MusicUtil {
         return findNoteLower(pitch, numSteps - 1, thisPitch)
     }
 
-    public static List<PitchClass> findMostProminentPitchesForWindow(List<List<Note>> window, int startSlice, int windowSize = 3) {
-        final double REQUIRED_SHARE = 0.15
+    public static List<PitchClass> findMostProminentPitchesForWindow(List<List<Note>> window,
+                                                                     int startSlice,
+                                                                     int windowSize = 3,
+                                                                     double pickiness) {
         def intensities = new HashMap<PitchClass, Double>()
         PitchClass.values().each { intensities.put(it, 0.0) }
         def totalIntensity = 0.0
@@ -45,7 +47,7 @@ public class MusicUtil {
         }
         def pitches = new ArrayList<PitchClass>()
         PitchClass.values().each {
-            if (intensities.get(it) >= totalIntensity * REQUIRED_SHARE) {
+            if (intensities.get(it) >= totalIntensity * pickiness) {
                 pitches.add(it)
                 intensities.remove(it)
             }
