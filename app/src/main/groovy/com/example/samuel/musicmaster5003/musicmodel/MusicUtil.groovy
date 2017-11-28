@@ -82,6 +82,6 @@ public class MusicUtil {
                 return true
             }
         }
-        chords
+        chords.findAll { it.length > 1 }
     }
 }

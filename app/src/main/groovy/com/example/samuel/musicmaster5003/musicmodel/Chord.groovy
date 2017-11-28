@@ -40,6 +40,13 @@ public class Chord {
         this.pitches = pitches
     }
 
+    static Chord fromString(String description) {
+        def parts = description.split(":");
+        def root = PitchClass.values().find { it.name() == parts[0] }
+        def qual = Quality.values().find { it.displayName == parts[1] }
+        return new Chord(root, qual, null)
+    }
+
     static Chord fromPitchClasses(List<PitchClass> pitchClasses) {
         def numPitches = pitchClasses.size()
         if (numPitches < 2 || numPitches > 4) {
