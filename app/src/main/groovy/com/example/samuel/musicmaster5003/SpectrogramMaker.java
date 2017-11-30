@@ -48,7 +48,8 @@ public class SpectrogramMaker {
         Arrays.fill(im, 0.0);
 
         for (int i = 0; i < nX; i++) {
-            double[] transformed = fft.fft(Arrays.copyOfRange(rawData, i * WINDOW_STEP, i * WINDOW_STEP + nY), im);
+            double[] windowed = triangularWindow(Arrays.copyOfRange(rawData, i * WINDOW_STEP, i * WINDOW_STEP + nY));
+            double[] transformed = fft.fft(windowed, im);
             for (int j = 0; j < transformed.length / 2; j += 2) {
                 ampSquare = Math.pow(transformed[j], 2) + Math.pow(transformed[j + 1], 2);
                 plotData[i][j / 2] = ampSquare;
@@ -69,5 +70,14 @@ public class SpectrogramMaker {
         }
 
         return theImage;
+    }
+
+    private static double[] triangularWindow(double[] arr) {
+        double[] windowed = new double[arr.length];
+        final int N = arr.length;
+        for (int i = 0; i < arr.length; i++) {
+            windowed[i] = arr[i] * (1 - Math.abs((i - ((N - 1) / 2)) / (N / 2)));
+        }
+        return windowed;
     }
 }
