@@ -26,9 +26,9 @@ public class SpectrogramMaker {
         double highestDetectableFrequency = sampleRate / 2.0;
         int rateRatio = ((int)highestDetectableFrequency) / MAX_FREQ_NEEDED;
         int lowestFrequency = 351;//(int)(5.0 * (sampleRate / rateRatio) / WINDOW_SIZE);
-        int step = length / rateRatio;
+        int compressedSize = length / rateRatio;
 
-        double[] temp = new double[step];
+        double[] temp = new double[compressedSize];
         for (int i = 0; i < length - rateRatio; i += rateRatio) {
             temp[i / rateRatio] = rawData[i];
         }
@@ -40,9 +40,6 @@ public class SpectrogramMaker {
         int nY = WINDOW_SIZE;
         double[][] plotData = new double[nX][WINDOW_SIZE / 2];
 
-        double maxAmp = Double.MIN_VALUE;
-        double minAmp = Double.MAX_VALUE;
-
         double ampSquare;
 
         FastFourierTransform fft = new FastFourierTransform(WINDOW_SIZE);
@@ -53,22 +50,11 @@ public class SpectrogramMaker {
         for (int i = 0; i < nX; i++) {
             double[] transformed = fft.fft(Arrays.copyOfRange(rawData, i * WINDOW_STEP, i * WINDOW_STEP + nY), im);
             for (int j = 0; j < transformed.length / 2; j += 2) {
-                ampSquare = Math.max(Math.pow(transformed[j], 2) + Math.pow(transformed[j + 1], 2), 0);
+                ampSquare = Math.pow(transformed[j], 2) + Math.pow(transformed[j + 1], 2);
                 plotData[i][j / 2] = ampSquare;
-                maxAmp = Math.max(ampSquare, maxAmp);
-                minAmp = Math.min(ampSquare, minAmp);
             }
         }
-
-        //Normalization
-        double diff = maxAmp - minAmp;
-        for (int i = 0; i < plotData.length; i++) {
-            for (int j = 0; j < plotData[0].length; j++) {
-                plotData[i][j] = (plotData[i][j] - minAmp) / diff;
-            }
-
-        }
-        return new Spectrogram(createBitmap(plotData), plotData, lowestFrequency, MAX_FREQ_NEEDED);
+        return new Spectrogram(null, plotData, lowestFrequency, MAX_FREQ_NEEDED);
     }
 
     private static Bitmap createBitmap(double[][] plotData) {
